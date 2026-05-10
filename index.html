@@ -1,1 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Browser Arcade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
+  <header>
+    <div class="logo">BROWSER<br><span>ARCADE</span></div>
+    <p class="tagline">Open-source games, playable right in your browser.</p>
+    <div class="insert-coin">▶ INSERT COIN TO CONTINUE ◀</div>
+
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="search" placeholder="Search games..." autocomplete="off" />
+    </div>
+  </header>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-tag="all">All Games</button>
+    <button class="filter-btn" data-tag="arcade">Arcade</button>
+    <button class="filter-btn" data-tag="puzzle">Puzzle</button>
+    <button class="filter-btn" data-tag="action">Action</button>
+    <button class="filter-btn" data-tag="classic">Classic</button>
+    <button class="filter-btn" data-tag="strategy">Strategy</button>
+  </div>
+
+  <main id="game-grid">
+
+    <a class="game-card" href="games/snake/index.html" data-tags="classic action" data-title="snake">
+      <div class="card-thumb thumb-green">
+        <span class="emoji">🐍</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">SNAKE</div>
+        <p class="card-desc">Eat the food, grow longer, and don't crash into yourself or the walls.</p>
+        <div class="card-footer">
+          <span class="tag tag-classic">Classic</span>
+          <button class="play-btn">▶ PLAY</button>
+        </div>
+      </div>
+    </a>
+
+    <a class="game-card" href="games/tetris/index.html" data-tags="arcade puzzle" data-title="tetris">
+      <div class="card-thumb thumb-blue">
+        <span class="emoji">🟦</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">TETRIS</div>
+        <p class="card-desc">Stack falling blocks to clear lines. How high can you survive?</p>
+        <div class="card-footer">
+          <span class="tag tag-arcade">Arcade</span>
+          <button class="play-btn">▶ PLAY</button>
+        </div>
+      </div>
+    </a>
+
+    <a class="game-card" href="games/2048/index.html" data-tags="puzzle strategy" data-title="2048">
+      <div class="card-thumb thumb-amber">
+        <span class="emoji">🔢</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">2048</div>
+        <p class="card-desc">Slide and merge tiles to reach the elusive 2048 tile.</p>
+        <div class="card-footer">
+          <span class="tag tag-puzzle">Puzzle</span>
+          <button class="play-btn">▶ PLAY</button>
+        </div>
+      </div>
+    </a>
+
+    <!-- TO ADD MORE GAMES: copy one of the blocks above, change the href, emoji, title, desc, and tags -->
+
+    <div class="empty" id="empty-state">
+      <div class="empty-icon">🕹️</div>
+      <p>No games match your search. Try a different keyword!</p>
+    </div>
+
+  </main>
+
+  <footer>
+    All games are open-source. Built with ❤️ on
+    <a href="https://pages.github.com" target="_blank" rel="noopener">GitHub Pages</a>.
+    <br><br>
+    Want to add a game?
+    <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/issues" target="_blank" rel="noopener">Open an issue →</a>
+  </footer>
+
+  <script>
+    const cards = document.querySelectorAll('.game-card');
+    const searchEl = document.getElementById('search');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const emptyState = document.getElementById('empty-state');
+    let activeTag = 'all';
+
+    function filterCards() {
+      const q = searchEl.value.toLowerCase().trim();
+      let visible = 0;
+      cards.forEach(card => {
+        const title = card.dataset.title || '';
+        const tags = card.dataset.tags || '';
+        const show = (!q || title.includes(q)) && (activeTag === 'all' || tags.includes(activeTag));
+        card.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      emptyState.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    searchEl.addEventListener('input', filterCards);
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTag = btn.dataset.tag;
+        filterCards();
+      });
+    });
+
+    document.querySelectorAll('.play-btn').forEach(btn => {
+      btn.addEventListener('click', e => e.preventDefault());
+    });
+  </script>
+
+</body>
+</html>
